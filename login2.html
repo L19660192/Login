@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f0c29; /* Fondo más oscuro */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Contenedor de líneas verticales */
+        .falling-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Cada una de las líneas */
+        .line {
+            position: absolute;
+            top: -100%;
+            width: 4px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: fall 6s linear infinite;
+        }
+
+        /* Posicionamos las 3 líneas */
+        .line:nth-child(1) {
+            left: 20%;
+            animation-duration: 8s;
+        }
+        .line:nth-child(2) {
+            left: 50%;
+            animation-duration: 6s;
+        }
+        .line:nth-child(3) {
+            left: 80%;
+            animation-duration: 10s;
+        }
+
+        /* Animación de las líneas cayendo */
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.866);
+            padding: 40px;
+            width: 300px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            font-size: 18px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-box input:focus {
+            border-bottom: 2px solid #00b4db;
+            box-shadow: 0 0 8px rgba(0, 180, 219, 0.7);
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+        .input-box input:focus ~ label,
+        .input-box input:not(:placeholder-shown) ~ label {
+            top: -20px;
+            left: 5px;
+            font-size: 12px;
+            color: #00b4db;
+        }
+
+        .button-box button {
+            width: 100%;
+            padding: 10px;
+            background: #00b4db;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .button-box button:hover {
+            background: #0083b0;
+            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        /* Botón de registro */
+        .register-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            border: 2px solid #00b4db;
+            border-radius: 5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 16px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-btn:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: 0.5s;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+        }
+
+        .register-btn:hover:before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .register-btn:hover {
+            background: #00b4db;
+            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4);
+            border-color: transparent;
+        }
+
+        /* Estilos para el modal de registro */
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); 
+            justify-content: center;
+            align-items: center;
+            z-index: 2; /* Para estar por encima del login */
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+        }
+
+        .modal-content h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #00b4db;
+        }
+    </style>
+</head>
+<body>
+    <!-- Líneas verticales -->
+    <div class="falling-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Iniciar Sesión</h2>
+            <form>
+                <div class="input-box">
+                    <input type="text" required>
+                    <label>Usuario</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" required>
+                    <label>Contraseña</label>
+                </div>
+                <div class="button-box">
+                    <button type="submit">Ingresar</button>
+                </div>
+                <div class="register-box">
+                    <a href="#" class="register-btn" id="openModal">Registrarse</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal" id="modal">|
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Registrarse</h2>
+            <form>
+                <div class="input-box">
+                    <input type="text" required>
+                    <label>Nombre de usuario</label>
+                </div>
+                <div class="input-box">
+                    <input type="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" required>
+                    <label>Contraseña</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" required>
+                    <label>Confirmar contraseña</label>
+                </div>
+                <div class="button-box">
+                    <button type="submit">Registrarse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Obtener los elementos del DOM
+        const modal = document.getElementById("modal");
+        const openModal = document.getElementById("openModal");
+        const closeModal = document.getElementById("closeModal");
+
+        // Mostrar el modal cuando se hace clic en "Registrarse"
+        openModal.addEventListener("click", function(e) {
+            e.preventDefault(); // Evitar el comportamiento por defecto del enlace
+            modal.style.display = "flex";
+        });
+
+        // Cerrar el modal cuando se hace clic en la 'X'
+        closeModal.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+
+        // Cerrar el modal si se hace clic fuera del contenido del modal
+        window.addEventListener("click", function(e) {
+            if (e.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
